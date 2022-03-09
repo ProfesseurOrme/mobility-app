@@ -1,0 +1,62 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&family=Sansita+Swashed&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+
+$primary : #227c9d;
+$info : #fef9ef;
+$danger : #fe6d73;
+$warning : #ffcb77;
+$success : #17c3b2;
+
+@import "~bootstrap/scss/bootstrap";
+
+@mixin navigationBlock () {
+    padding: 0.5rem;
+    margin: 0.5rem;
+    border: 1px solid white;
+    border-radius: 5px;
+}
+
+.custom-icon {
+    width: 30px;
+}
+
+#app {
+    display: flex;
+    flex-flow: column;
+    min-height: 100vh;
+    background-color: $dark;
+    font-family: "Poppins", sans-serif;
+    color: white;
+
+    .navbar {
+        .navbar-brand {
+            font-family: 'Sansita Swashed', cursive;
+            font-size: 1.8rem;
+        }
+    }
+
+    section {
+        &.navigation {
+            flex: 0 1 auto;
+            @include navigationBlock();
+        }
+
+        &.content {
+            flex: 1 1 auto;
+            .card {
+                background-color: $dark;
+                border: 1px solid white;
+            }
+        }
+
+        &.footer {
+            flex: 0 1 40px;
+            @include navigationBlock();
+        }
+    }
+}
+
+
+
