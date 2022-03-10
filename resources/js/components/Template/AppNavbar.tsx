@@ -4,6 +4,7 @@ import {LinkContainer} from "react-router-bootstrap"
 // @ts-ignore
 import logo from "../../assets/img/logo.svg";
 import {useTranslation} from "react-i18next";
+import {FaBiking, FaBus, FaCar, FaRoad} from "react-icons/fa";
 
 const AppNavbar : React.FunctionComponent = () => {
 
@@ -14,29 +15,21 @@ const AppNavbar : React.FunctionComponent = () => {
             <Container>
                 <LinkContainer to={"/"}>
                     <Navbar.Brand>
-                        <img
-                            alt=""
-                            src={logo}
-                            width="40"
-                            height="40"
-                            className="d-inline-block"
-                        />{' '}
                         {t("brand")}
                     </Navbar.Brand>
                 </LinkContainer>
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="me-auto">
-                        <LinkContainer to={"/bikes-stations"}>
-                            <Nav.Link href="#features">Bikes Stations</Nav.Link>
+                        <LinkContainer to={"/cycles-stations"}>
+                            <Nav.Link><FaBiking /> Cycle Stations</Nav.Link>
                         </LinkContainer>
-                        <LinkContainer to={"/bus-stations"}>
-                            <Nav.Link href="#pricing">Bus Stations</Nav.Link>
+                        <LinkContainer to={"/public-transports"}>
+                            <Nav.Link><FaBus /> Public Transports</Nav.Link>
                         </LinkContainer>
-                        <LinkContainer to={"/car-parking"}>
-                            <Nav.Link href="#pricing">Car Parking</Nav.Link>
+                        <LinkContainer to={"/traffic"}>
+                            <Nav.Link><FaRoad /> Traffic</Nav.Link>
                         </LinkContainer>
-
                     </Nav>
                 </Navbar.Collapse>
             </Container>

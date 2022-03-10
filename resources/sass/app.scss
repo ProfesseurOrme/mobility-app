@@ -3,15 +3,15 @@
 @import "~bootstrap/scss/functions";
 @import "~bootstrap/scss/variables";
 
-$primary : #227c9d;
-$info : #fef9ef;
-$danger : #fe6d73;
-$warning : #ffcb77;
-$success : #17c3b2;
+$primary: #227c9d;
+$info: #fef9ef;
+$danger: #fe6d73;
+$warning: #ffcb77;
+$success: #17c3b2;
 
 @import "~bootstrap/scss/bootstrap";
 
-@mixin navigationBlock () {
+@mixin navigationBlock() {
     padding: 0.5rem;
     margin: 0.5rem;
     border: 1px solid white;
@@ -45,9 +45,15 @@ $success : #17c3b2;
 
         &.content {
             flex: 1 1 auto;
+
             .card {
                 background-color: $dark;
                 border: 1px solid white;
+
+                .card-body {
+                    > .traffic-legend {
+                    }
+                }
             }
         }
 
@@ -57,6 +63,3 @@ $success : #17c3b2;
         }
     }
 }
-
-
-

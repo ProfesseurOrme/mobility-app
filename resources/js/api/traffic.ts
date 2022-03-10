@@ -1,0 +1,1 @@
+export const apiTraffic: string = "https://opendata.bordeaux-metropole.fr/api/records/1.0/search/?rows=9999&location=12,44.88422,-0.5924&basemap=jawg.streets&fields=geo_shape,typevoie,etat,cdate,mdate,code_commune&dataset=ci_trafi_l&timezone=Europe%2FParis&lang=fr";

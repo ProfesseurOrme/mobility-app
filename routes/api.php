@@ -14,4 +14,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::apiResource("/bikes", ApiBikeController::class)->only("index");
+Route::apiResource("/cycles", ApiBikeController::class)->only("index");

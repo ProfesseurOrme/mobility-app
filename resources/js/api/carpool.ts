@@ -1,0 +1,1 @@
+export const apiCarpoolAreas : string = "https://opendata.bordeaux-metropole.fr/api/records/1.0/search/?rows=999&fields=gid,ident,id_local,libelle,adresse,insee,implantation,actif,condition_acces,accessibilite_24_24,gestionnaire,nb_place,nb_pmr,nb_irve,geo_point_2d,geo_shape,cdate,mdate&dataset=st_covoiturage_p&timezone=Europe%2FParis&lang=fr";

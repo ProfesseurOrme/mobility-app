@@ -1,6 +1,6 @@
 import {GeoJSON, LatLngExpression} from "leaflet";
 
-export type IBikeStation = {
+export type ICycleStation = {
     datasetid: string,
     recordid: string,
     fields:

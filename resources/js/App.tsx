@@ -1,7 +1,7 @@
 import React from "react";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
-import AppFooter from "./components/sections/AppFooter";
-import AppNavbar from "./components/sections/AppNavbar";
+import AppFooter from "./components/Template/AppFooter";
+import AppNavbar from "./components/Template/AppNavbar";
 import {Container} from "react-bootstrap";
 import {webRoutes} from "./router/routes";
 

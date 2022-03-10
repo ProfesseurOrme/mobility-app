@@ -1,13 +1,13 @@
 import Home from "../components/Home";
-import Bike from "../components/bikes/Bike";
-import Bus from "../components/bus/Bus";
-import Car from "../components/cars/Car";
-import Error from "../components/error/Error";
+import Cycle from "../components/Cycle/Cycle";
+import Error from "../components/Error/Error";
+import Traffic from "../components/Traffic/Traffic";
+import PublicTransport from "../components/PublicTransport/PublicTransport";
 
 export const webRoutes = [
     {path: '/', name: 'Home', Component: Home},
-    {path: '/bikes-stations', name: 'Bike', Component: Bike},
-    {path: '/bus-stations', name: 'Bus', Component: Bus},
-    {path: '/car-parking', name: 'Car', Component: Car},
+    {path: '/cycles-stations', name: 'Cycle', Component: Cycle},
+    {path: '/Traffic', name: 'Traffic', Component: Traffic},
+    {path: '/public-transports', name: 'PublicTransport', Component: PublicTransport},
     {path: "*", name: "Error", Component: Error}
 ];
