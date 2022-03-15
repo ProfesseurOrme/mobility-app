@@ -18,8 +18,16 @@ $success: #17c3b2;
     border-radius: 5px;
 }
 
+* {
+    font-size: calc(12px + (16 - 12) * ((100vw - 300px) / (1600 - 300)));
+}
+
 .custom-icon {
     width: 30px;
+}
+
+.badge {
+    margin-bottom: 0.5rem;
 }
 
 #app {
@@ -51,8 +59,7 @@ $success: #17c3b2;
                 border: 1px solid white;
 
                 .card-body {
-                    > .traffic-legend {
-                    }
+                    flex: none;
                 }
             }
         }

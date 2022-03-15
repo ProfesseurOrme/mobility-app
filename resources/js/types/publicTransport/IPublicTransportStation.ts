@@ -19,7 +19,7 @@ export type IPublicTransportStation = {
         ident: string,
         gml_id: string,
         voirie: string,
-        numero: 1220,
+        numero: number,
         geo_point_2d: LatLngExpression,
         mdate: string
     },

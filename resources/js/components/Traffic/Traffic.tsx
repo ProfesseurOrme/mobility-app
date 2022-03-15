@@ -3,35 +3,48 @@ import {ITraffic} from "../../types/traffic/ITraffic";
 import axios, {AxiosResponse} from "axios";
 import {apiTraffic} from "../../api/traffic";
 import {Badge, Button, Card, Col, Form, Row, Spinner} from "react-bootstrap";
-import {GeoJSON, MapContainer, Popup, TileLayer} from "react-leaflet";
+import {GeoJSON, MapContainer, Marker, Popup, TileLayer} from "react-leaflet";
 import {mapProperties} from "../../props/mapProperties";
-import { ICarpool } from "../../types/traffic/iCarpool";
+import {ICarpool} from "../../types/traffic/iCarpool";
 import {IParking} from "../../types/traffic/IParking";
+import {apiCarpoolAreas} from "../../api/carpool";
+import {apiCarPakingAreas} from "../../api/parking";
+import {divIcon} from "leaflet";
+import ReactDOMServer from "react-dom/server";
+import {BsFillPeopleFill} from "react-icons/bs";
+import {RiParkingFill} from "react-icons/ri";
+import Carpool from "./Data/Carpool";
+import Parking from "./Data/Parking";
 
-type ICarpoolState = {
-    loaded : boolean,
-    data : ICarpool[]
+type IState = {
+    loaded: boolean,
+    checked: boolean
+    data: (ICarpool[] | IParking[]) | []
 }
 
-type IParkingState = {
-    loaded : boolean,
-    data : IParking[]
-}
+type Details = {
+    data: ICarpool | IParking,
+    kind: string
+};
 
 const Traffic: React.FunctionComponent = () => {
 
     const [ traffic, setTraffic ] = React.useState<Array<ITraffic>>([]);
     const [ loaded, setLoaded ] = React.useState<boolean>(false);
-    const [carpool, setCarpool] = React.useState<ICarpoolState>({
-            loaded : false,
-            data : []
+    const [ carpool, setCarpool ] = React.useState<IState>({
+            loaded: false,
+            checked: false,
+            data: []
         })
     ;
-    const [parking, setParking] = React.useState<IParkingState>({
-            loaded : false,
-            data : []
+    const [ parking, setParking ] = React.useState<IState>({
+            loaded: false,
+            checked: false,
+            data: []
         })
     ;
+
+    const [ details, setDetails ] = React.useState<Details | null>(null);
 
     React.useEffect(() => {
         getTraffic();
@@ -48,12 +61,43 @@ const Traffic: React.FunctionComponent = () => {
         ;
     }
 
+    const getAdditionalData = (checked: boolean, setState: React.Dispatch<React.SetStateAction<IState>>, valueState: IState, url: string): void => {
+        if (Array.isArray(valueState.data) && valueState.data.length && checked) {
+            setState(prevState => ({
+                ...prevState,
+                loaded: true,
+                checked: checked
+            }))
+        } else if (checked) {
+            axios.get(url)
+                .then((results) => {
+                    setState(prevState => ({
+                        ...prevState,
+                        data: results.data.records
+                    }));
+                })
+                .finally(() => {
+                    setState(prevState => ({
+                        ...prevState,
+                        loaded: true,
+                        checked: true
+                    }))
+                })
+        } else {
+            setState(prevState => ({
+                ...prevState,
+                checked: checked,
+                selected: null
+            }))
+        }
+    }
+
     const getTrafficData = (): Promise<AxiosResponse> => {
         return axios.get(apiTraffic);
     }
 
     const getColor = (state: string): string => {
-        let color: string = "";
+        let color: string;
         switch (state) {
             case "FLUIDE" :
                 color = "green";
@@ -71,6 +115,14 @@ const Traffic: React.FunctionComponent = () => {
                 color = "grey";
         }
         return color;
+    }
+
+    const getDetails = (obj: any) => {
+        if (obj.kind === "parking") {
+            return <Parking parking={obj.data}/>
+        } else if (obj.kind === "carpool") {
+            return <Carpool carpool={obj.data}/>
+        }
     }
 
     return (
@@ -94,7 +146,7 @@ const Traffic: React.FunctionComponent = () => {
                                 >
                                     <TileLayer
                                         url="https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png"
-                                        attribution='© <a href="https://stadiamaps.com/">Stadia Maps</a>, © <a href="https://openmaptiles.org/">OpenMapTiles</a> © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+                                        attribution='© <a href="https://stadiamaps.com/">Stadia Maps</a>, © <a href="https://openmaptiles.org/">OpenMapTiles</a> © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
                                     />
                                     {
                                         traffic.map((value, index) => (
@@ -115,6 +167,66 @@ const Traffic: React.FunctionComponent = () => {
                                             </GeoJSON>
                                         ))
                                     }
+                                    {
+                                        (carpool.loaded && carpool.checked && Array.isArray(carpool.data) && carpool.data.length) ?
+                                            carpool.data.map((value, index) => (
+                                                <Marker
+                                                    key={index}
+                                                    position={value.fields.geo_point_2d}
+                                                    icon={divIcon({
+                                                        className: "custom-icon",
+                                                        html: ReactDOMServer.renderToString(<BsFillPeopleFill style={{
+                                                            width: "22px",
+                                                            height: "22px",
+                                                            borderRadius: "50%",
+                                                            padding: "0.25rem 0.3rem",
+                                                            backgroundColor: "violet"
+                                                        }} color={"#ffffff"}/>)
+                                                    })}
+                                                    eventHandlers={{
+                                                        click: () => {
+                                                            setDetails({
+                                                                data: value,
+                                                                kind: "carpool"
+                                                            })
+                                                        }
+                                                    }}
+                                                >
+                                                </Marker>
+                                            ))
+                                            :
+                                            <></>
+                                    }
+                                    {
+                                        (parking.loaded && parking.checked && Array.isArray(parking.data) && parking.data.length) ?
+                                            parking.data.map((value, index) => (
+                                                <Marker
+                                                    key={index}
+                                                    position={value.fields.geo_point_2d}
+                                                    icon={divIcon({
+                                                        className: "custom-icon",
+                                                        html: ReactDOMServer.renderToString(<RiParkingFill style={{
+                                                            width: "22px",
+                                                            height: "22px",
+                                                            borderRadius: "50%",
+                                                            padding: "0.25rem 0.3rem",
+                                                            backgroundColor: "blue"
+                                                        }} color={"#ffffff"}/>)
+                                                    })}
+                                                    eventHandlers={{
+                                                        click: () => {
+                                                            setDetails({
+                                                                data: value,
+                                                                kind: "parking"
+                                                            })
+                                                        }
+                                                    }}
+                                                >
+                                                </Marker>
+                                            ))
+                                            :
+                                            <></>
+                                    }
                                 </MapContainer>
                             </Card>
                         </Col>
@@ -126,6 +238,14 @@ const Traffic: React.FunctionComponent = () => {
                                             type="switch"
                                             id="custom-switch"
                                             label="Display carpool areas"
+                                            onChange={(event: React.ChangeEvent<HTMLInputElement>): void => {
+                                                getAdditionalData(
+                                                    event.target.checked,
+                                                    setCarpool,
+                                                    carpool,
+                                                    apiCarpoolAreas
+                                                )
+                                            }}
                                         />
                                     </Form>
                                     <Form>
@@ -133,9 +253,23 @@ const Traffic: React.FunctionComponent = () => {
                                             type="switch"
                                             id="custom-switch"
                                             label="Display car parking areas"
+                                            onChange={(event: React.ChangeEvent<HTMLInputElement>): void => {
+                                                getAdditionalData(
+                                                    event.target.checked,
+                                                    setParking,
+                                                    parking,
+                                                    apiCarPakingAreas
+                                                )
+                                            }}
                                         />
                                     </Form>
                                 </Card.Body>
+                                {
+                                    ((details !== null)) ?
+                                        getDetails(details)
+                                        :
+                                        <></>
+                                }
                             </Card>
                         </Col>
                     </Row>
